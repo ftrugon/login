@@ -37,45 +37,76 @@ fun App() {
         ) {
 
 
-            OutlinedTextField(
-                value = user,
-                label = { Text("Usuario") },
-                onValueChange = {user = it}
-            )
+            usuario(user){
+                user = it
+            }
 
-            var pasVisible by remember { mutableStateOf(false) }
+            contrasenia(password){
+                password = it
+            }
 
-            OutlinedTextField(
-                value = password,
-                label = { Text("Contraseña") },
-                onValueChange = {password = it},
-                visualTransformation = if (pasVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                trailingIcon = {
-                    IconToggleButton(
-                        checked = pasVisible,
-                        onCheckedChange = {pasVisible = it}
-                    ){
-                        Icon(
-                            imageVector = if (pasVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = null
-                        )
-                    }
-                }
-            )
-
-            Button(
-                onClick = {
-                    user = ""
-                    password = ""
-                },
-                enabled = buttonEnabled
-            ) {
-                Text("Login")
+            botoncito(buttonEnabled){
+                user = ""
+                password = ""
             }
         }
     }
 }
 
+@Composable
+fun usuario(
+    user:String,
+    onTeclearUsuario: (String) -> Unit
+){
+    OutlinedTextField(
+        value = user,
+        label = { Text("Usuario") },
+        onValueChange = onTeclearUsuario
+    )
+}
+
+@Composable
+fun contrasenia(
+    password:String,
+    onTeclearContrasenia: (String) -> Unit
+){
+    var pasVisible by remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = password,
+        label = { Text("Contraseña") },
+        onValueChange = onTeclearContrasenia,
+        visualTransformation = if (pasVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = { iconito(pasVisible){pasVisible = it} }
+    )
+}
+
+@Composable
+fun iconito(pasVisible:Boolean,tal: (Boolean) -> Unit){
+    IconToggleButton(
+        checked = pasVisible,
+        onCheckedChange = tal
+    ){
+        Icon(
+            imageVector = if (pasVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+            contentDescription = null
+        )
+    }
+}
+
+@Composable
+fun botoncito(
+    buttonEnabled:Boolean,
+    onCambio: () -> Unit,
+    ){
+
+    Button(
+        onClick = onCambio,
+        enabled = buttonEnabled
+    ) {
+        Text("Login")
+    }
+}
 
 fun main() = application {
 
